@@ -1,58 +1,47 @@
-import 'package:flutter/cupertino.dart';
-import 'view/todo_view.dart';
-import 'view/weather_view.dart';
+import 'package:flutter/material.dart';
+import 'package:test_flutter/views/weather_view.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-// View
-void main() {
-  runApp(const MainApp());
+
+void main() async {
+  await dotenv.load(fileName: ".env");
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const CupertinoApp(
-      theme: CupertinoThemeData(
-        primaryColor: CupertinoColors.systemBlue,
+    return MaterialApp(
+      title: 'Today Weather App',
+      theme: ThemeData.light(
+        useMaterial3: true,
       ),
-      home: AppTabScaffold(),
+      darkTheme: ThemeData.dark(
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(),
     );
   }
 }
 
-class AppTabScaffold extends StatelessWidget {
-  const AppTabScaffold({super.key});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
 
   @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.list_bullet),
-            label: 'Todo',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.cloud_sun),
-            label: 'Weather',
-          ),
-        ],
+    return Scaffold(
+      backgroundColor: Colors.blueGrey,
+      body: Center(
+        child: WeatherView(),
       ),
-      tabBuilder: (context, index) {
-        return CupertinoTabView(
-          builder: (context) {
-            switch (index) {
-              case 0:
-                return const TodoScreen();
-              case 1:
-                return const WeatherScreen();
-              default:
-                return const TodoScreen();
-            }
-          },
-        );
-      },
     );
   }
 }
