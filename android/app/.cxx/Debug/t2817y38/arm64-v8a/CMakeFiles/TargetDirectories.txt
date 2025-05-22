@@ -1,2 +1,0 @@
-/Users/ronnasat/S3/ztest/test-flutter/test_flutter/android/app/.cxx/Debug/t2817y38/arm64-v8a/CMakeFiles/edit_cache.dir
-/Users/ronnasat/S3/ztest/test-flutter/test_flutter/android/app/.cxx/Debug/t2817y38/arm64-v8a/CMakeFiles/rebuild_cache.dir

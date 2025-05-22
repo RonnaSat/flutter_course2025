@@ -35,13 +35,13 @@ class _WeatherViewState extends State<WeatherView> {
     return weatherViewModel.isLoading
         ? const Center(
             child: CircularProgressIndicator(
-              color: Colors.white,
+              color: Colors.black,
               strokeWidth: 2,
             ),
           )
         : Container(
-          color: Colors.blueGrey,
-          child: Center(
+            color: Colors.blueGrey,
+            child: Center(
               child: SafeArea(
                 bottom: false,
                 child: Column(
@@ -92,14 +92,16 @@ class _WeatherViewState extends State<WeatherView> {
                               ),
                             ),
                           Text(
-                            weatherViewModel.currentWeather?.formattedDate ?? "",
+                            weatherViewModel.currentWeather?.formattedDate ??
+                                "",
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.white),
                           ),
                           Text(
-                            weatherViewModel.currentWeather?.formattedTime ?? "",
+                            weatherViewModel.currentWeather?.formattedTime ??
+                                "",
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.normal,
@@ -114,49 +116,28 @@ class _WeatherViewState extends State<WeatherView> {
                         ],
                       ),
                     ),
+
                     SafeArea(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: weatherViewModel.weathers
-                              .map((weather) => WeatherCard(
-                                    weather: weather,
-                                  ))
-                              .toList(),
+                      child: SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: weatherViewModel.weathers.length,
+                          itemBuilder: (context, index) {
+                            final weather = weatherViewModel.weathers[index];
+                            return _weatherCard(weather: weather);
+                          },
                         ),
                       ),
                     ),
-                    // SafeArea(
-                    //   child: SizedBox(
-                    //     height: 200,
-                    //     child: ListView.builder(
-                    //       scrollDirection: Axis.horizontal,
-                    //       itemCount: weatherViewModel.weathers.length,
-                    //       itemBuilder: (context, index) {
-                    //         final weather = weatherViewModel.weathers[index];
-                    //         return WeatherCard(weather: weather);
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
             ),
-        );
+          );
   }
-}
 
-class WeatherCard extends StatelessWidget {
-  final Weather weather;
-
-  const WeatherCard({
-    super.key,
-    required this.weather,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _weatherCard({required Weather weather}) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),

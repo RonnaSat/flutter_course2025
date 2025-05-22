@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../viewModels/covid_form_view_model.dart';
 
-class CovidView extends StatefulWidget {
-  const CovidView({super.key});
+class CovidFormView extends StatefulWidget {
+  const CovidFormView({super.key});
 
   @override
-  State<CovidView> createState() => _CovidViewState();
+  State<CovidFormView> createState() => _CovidFormViewState();
 }
 
-class _CovidViewState extends State<CovidView> {
+class _CovidFormViewState extends State<CovidFormView> {
   final CovidFormViewModel _viewModel = CovidFormViewModel();
   @override
   void initState() {
@@ -143,7 +143,6 @@ class _CovidViewState extends State<CovidView> {
                         child: Text("Symptoms *",
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
-                      
                       if (_viewModel.symptomsError != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
@@ -152,7 +151,7 @@ class _CovidViewState extends State<CovidView> {
                             style: TextStyle(color: Colors.red, fontSize: 12),
                           ),
                         ),
-                        Spacer(),
+                      Spacer(),
                     ],
                   ),
                 ],
@@ -189,18 +188,34 @@ class _CovidViewState extends State<CovidView> {
                     backgroundColor: Colors.deepPurpleAccent,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () {
-                    if (_viewModel.validateForm()) {
+                  onPressed: () async {
+                    // Show loading indicator
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) =>
+                          const Center(child: CircularProgressIndicator()),
+                    );
+
+                    // Submit form and get result
+                    final errorMessage = await _viewModel.submitForm();
+
+                    // Close loading dialog
+                    Navigator.of(context).pop();
+
+                    if (errorMessage == null) {
+                      // Success case
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('Form Submitted Successfully'),
                           backgroundColor: Colors.green,
                         ),
                       );
                     } else {
+                      // Error case
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Please fill all required fields'),
+                          content: Text(errorMessage),
                           backgroundColor: Colors.red,
                         ),
                       );

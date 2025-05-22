@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/covid_form_model.dart';
 
 class CovidFormViewModel extends ChangeNotifier {
@@ -47,7 +48,8 @@ class CovidFormViewModel extends ChangeNotifier {
 
   void setLastname(String lastname) {
     covidFormModel.lastname = lastname;
-    lastNameController.text = lastname; // Update controller text when setting lastname
+    lastNameController.text =
+        lastname; // Update controller text when setting lastname
     _validateLastName();
     notifyListeners();
   }
@@ -166,5 +168,27 @@ class CovidFormViewModel extends ChangeNotifier {
     // Reset all symptoms to false
     symptoms.updateAll((key, value) => false);
     notifyListeners();
+  }
+
+  Future<String?> submitForm() async {
+    if (validateForm()) {
+      try {
+        await FirebaseFirestore.instance.collection('covid_forms').add({
+          'firstName': covidFormModel.name,
+          'lastName': covidFormModel.lastname,
+          'dob': covidFormModel.dob,
+          'gender': covidFormModel.gender,
+          'symptoms': covidFormModel.symptoms,
+          'submissionTimestamp': FieldValue.serverTimestamp(),
+        });
+        clearForm();
+        return null; // Indicates success
+      } catch (e) {
+        print('Error submitting form: $e');
+        return e.toString(); // Return error message
+      }
+    } else {
+      return 'Form validation failed.';
+    }
   }
 }
