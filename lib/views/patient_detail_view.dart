@@ -33,9 +33,9 @@ class PatientDetailView extends StatelessWidget {
             SizedBox(height: 24),
             _buildDetailCard('Patient Information', [
               _buildDetailRow('Name', patient.fullName),
-              _buildDetailRow('Age', '${patient.age ?? ''} years'),
-              _buildDetailRow('ID', '#${patient.id ?? ''}'),
-              if (patient.gender != null) _buildDetailRow('Gender', patient.gender!),
+              _buildDetailRow('Age', '${patient.ageInYears} years'),
+              if (patient.gender != null)
+                _buildDetailRow('Gender', patient.gender!),
             ]),
             SizedBox(height: 16),
             _buildDetailCard('Clinical Information', [

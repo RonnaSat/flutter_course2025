@@ -1,19 +1,15 @@
 class CovidFormModel {
-  int? id;
   String? name;
   String? lastname;
   String? dob;
-  int? age;
   String? gender;
   List<String> symptoms = [];
   String? date;
-  
+
   CovidFormModel({
-    this.id,
     this.name,
     this.lastname,
     this.dob,
-    this.age,
     this.gender,
     List<String>? symptoms,
     this.date,
@@ -22,10 +18,19 @@ class CovidFormModel {
       this.symptoms = symptoms;
     }
   }
-  
+
   // Helper method to get full name
   String get fullName => '$name ${lastname ?? ''}';
-  
+
   // Helper method to get symptoms as a string
   String get symptomsList => symptoms.join(', ');
+
+  int get ageInYears {
+    if (dob != null) {
+      DateTime birthDate = DateTime.parse(dob!);
+      DateTime now = DateTime.now();
+      return now.year - birthDate.year;
+    }
+    return 0;
+  }
 }
