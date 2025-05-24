@@ -4,7 +4,7 @@ class CovidFormModel {
   String? dob;
   String? gender;
   List<String> symptoms = [];
-  String? date;
+  DateTime? date;
 
   CovidFormModel({
     this.name,

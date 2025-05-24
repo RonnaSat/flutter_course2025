@@ -32,137 +32,95 @@ class _WeatherViewState extends State<WeatherView> {
 
   @override
   Widget build(BuildContext context) {
-    return weatherViewModel.isLoading
-        ? const Center(
-            child: CircularProgressIndicator(
-              color: Colors.black,
-              strokeWidth: 2,
-            ),
-          )
-        : Container(
-            color: Colors.blueGrey,
-            child: Center(
-              child: SafeArea(
-                bottom: false,
+    return weatherViewModel.isLoading ? _loadingComponent() : _mainComponent();
+  }
+
+  Widget _mainComponent() {
+    return Container(
+      color: Colors.blueGrey,
+      child: Center(
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            weatherViewModel.currentWeather?.city ?? "",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            weatherViewModel.currentWeather?.condition ?? "",
-                            style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            weatherViewModel
-                                    .currentWeather?.formattedTempString ??
-                                "",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white),
-                          ),
-                          if (weatherViewModel.currentWeather != null)
-                            Image.network(
-                              weatherViewModel.currentWeather?.iconUrl ?? '',
-                              width: 48,
-                              height: 48,
-                            )
-                          else
-                            SizedBox(
-                              width: 48,
-                              height: 48,
-                              child: Icon(
-                                Icons.cloud_queue,
-                                size: 48,
-                                color: Colors.white,
-                              ),
-                            ),
-                          Text(
-                            weatherViewModel.currentWeather?.formattedDate ??
-                                "",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white),
-                          ),
-                          Text(
-                            weatherViewModel.currentWeather?.formattedTime ??
-                                "",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                weatherViewModel.fetchForcastData();
-                                weatherViewModel.fetchWeatherData();
-                              },
-                              icon: Icon(Icons.refresh, color: Colors.white)),
-                        ],
-                      ),
-                    ),
-
-                    SafeArea(
-                      child: SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: weatherViewModel.weathers.length,
-                          itemBuilder: (context, index) {
-                            final weather = weatherViewModel.weathers[index];
-                            return _weatherCard(weather: weather);
-                          },
-                        ),
-                      ),
-                    ),
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _weather(weather: weatherViewModel.currentWeather!),
+                    IconButton(
+                        onPressed: () {
+                          weatherViewModel.fetchAllData();
+                        },
+                        icon: Icon(Icons.refresh, color: Colors.white)),
                   ],
                 ),
               ),
-            ),
-          );
+              SafeArea(
+                child: SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: weatherViewModel.weathers.length,
+                    itemBuilder: (context, index) {
+                      final weather = weatherViewModel.weathers[index];
+                      return _weatherCard(weather: weather);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _loadingComponent() {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: Colors.black,
+        strokeWidth: 2,
+      ),
+    );
   }
 
   Widget _weatherCard({required Weather weather}) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SizedBox(
-          width: 150,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(weather.city),
-              Text(weather.condition,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)),
-              Text(weather.temperature.toString()),
-              Image.network(
-                weather.iconUrl,
-                width: 32,
-                height: 32,
-              ),
-              Text(weather.formattedDate),
-              Text(weather.formattedTime),
-            ],
-          ),
+      child: _weather(weather: weather, textColor: Colors.black),
+    );
+  }
+
+  Widget _weather({required Weather weather, Color? textColor}) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SizedBox(
+        width: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(weather.city,
+                style: TextStyle(color: textColor ?? Colors.white)),
+            Text(weather.condition,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: textColor ?? Colors.white)),
+            Text(weather.temperature.toString(),
+                style: TextStyle(color: textColor ?? Colors.white)),
+            Image.network(
+              weather.iconUrl,
+              width: 32,
+              height: 32,
+            ),
+            Text(weather.formattedDate,
+                style: TextStyle(color: textColor ?? Colors.white)),
+            Text(weather.formattedTime,
+                style: TextStyle(color: textColor ?? Colors.white)),
+          ],
         ),
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'patient_detail_view.dart';
-import '../models/covid_form_model.dart';
 import '../viewModels/patient_view_model.dart';
 
 class PatientsListView extends StatefulWidget {
@@ -62,9 +61,19 @@ class _PatientsListViewState extends State<PatientsListView> {
                           child: Text(patient.name?[0] ?? ''),
                         ),
                         title: Text(patient.fullName),
-                        subtitle: Text(
-                            'Age: ${patient.ageInYears} - ${patient.symptomsList}'),
-                        trailing: Text(patient.date ?? ''),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(patient.date != null
+                                ? "${patient.date!.day.toString().padLeft(2, '0')}-${patient.date!.month.toString().padLeft(2, '0')}-${patient.date!.year}"
+                                : 'Not specified'),
+                            Text(
+                              'Age: ${patient.ageInYears} - ${patient.symptomsList}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,

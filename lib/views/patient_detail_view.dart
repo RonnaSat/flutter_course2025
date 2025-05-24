@@ -40,7 +40,8 @@ class PatientDetailView extends StatelessWidget {
             SizedBox(height: 16),
             _buildDetailCard('Clinical Information', [
               _buildDetailRow('Symptoms', patient.symptomsList),
-              _buildDetailRow('Admission Date', patient.date ?? ''),
+              _buildDetailRow('Admission Date',
+                  patient.date?.toLocal().toString() ?? 'Not specified'),
             ]),
           ],
         ),

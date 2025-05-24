@@ -35,6 +35,8 @@ class PatientViewModel extends ChangeNotifier {
 
       List<CovidFormModel> forms = querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
+        final timestamp = data['submissionTimestamp'] as Timestamp?;
+
         return CovidFormModel(
           name: data['firstName'] as String?,
           lastname: data['lastName'] as String?,
@@ -44,6 +46,7 @@ class PatientViewModel extends ChangeNotifier {
                   ?.map((symptom) => symptom as String)
                   .toList() ??
               [],
+          date: timestamp?.toDate(),
         );
       }).toList();
       return forms;
