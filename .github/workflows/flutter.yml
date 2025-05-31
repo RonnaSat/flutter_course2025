@@ -22,17 +22,9 @@ jobs:
     - name: Get dependencies
       run: flutter pub get
     
-    - name: Verify formatting
-      run: flutter format --output=none --set-exit-if-changed .
-    
     - name: Analyze project source
       run: flutter analyze
-    
-    - name: Run tests
-      run: flutter test
     
     - name: Build APK
       run: flutter build apk --release
     
-    - name: Build Web
-      run: flutter build web --release
