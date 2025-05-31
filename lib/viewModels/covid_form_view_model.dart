@@ -184,7 +184,8 @@ class CovidFormViewModel extends ChangeNotifier {
         clearForm();
         return null; // Indicates success
       } catch (e) {
-        print('Error submitting form: $e');
+        // Log error instead of using print in production
+        debugPrint('Error submitting form: $e');
         return e.toString(); // Return error message
       }
     } else {

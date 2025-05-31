@@ -189,6 +189,10 @@ class _CovidFormViewState extends State<CovidFormView> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () async {
+                    // Store context before async operations
+                    final scaffoldMessenger = ScaffoldMessenger.of(context);
+                    final navigator = Navigator.of(context);
+
                     // Show loading indicator
                     showDialog(
                       context: context,
@@ -201,11 +205,11 @@ class _CovidFormViewState extends State<CovidFormView> {
                     final errorMessage = await _viewModel.submitForm();
 
                     // Close loading dialog
-                    Navigator.of(context).pop();
+                    navigator.pop();
 
                     if (errorMessage == null) {
                       // Success case
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      scaffoldMessenger.showSnackBar(
                         const SnackBar(
                           content: Text('Form Submitted Successfully'),
                           backgroundColor: Colors.green,
@@ -213,7 +217,7 @@ class _CovidFormViewState extends State<CovidFormView> {
                       );
                     } else {
                       // Error case
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      scaffoldMessenger.showSnackBar(
                         SnackBar(
                           content: Text(errorMessage),
                           backgroundColor: Colors.red,

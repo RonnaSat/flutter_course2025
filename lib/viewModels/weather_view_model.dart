@@ -62,12 +62,12 @@ class WeatherViewModel extends ChangeNotifier {
     bool locationAcquired = await _locationService.getCurrentLocation();
 
     if (!locationAcquired) {
-      print('Failed to acquire location.');
+      debugPrint('Failed to acquire location.');
       if (_locationService.locationError != null) {
-        print('Location Error: ${_locationService.locationError}');
+        debugPrint('Location Error: ${_locationService.locationError}');
       }
     } else {
-      print(
+      debugPrint(
           'Location acquired: Lat: ${_locationService.latitude}, Lon: ${_locationService.longitude}');
     }
 
